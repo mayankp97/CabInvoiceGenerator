@@ -52,7 +52,25 @@ namespace CabInvoiceGeneratorTests
             Assert.That(exception.type, Is.EqualTo(CabInvoiceException.ExceptionType.INVALID_TIME));
         }
 
-        
+        [Test]
+        public void CalculateFare_IfMultipleRidesPassed_ReturnsTotalFare()
+        {
+            Ride[] rides = { new Ride(1.0,1), new Ride(2.0,1) };
+            var invoiceGenerator = new InvoiceGenerator(RideType.NORMAL);
+
+            var result = invoiceGenerator.CalculateFare(rides);
+
+            Assert.That(result, Is.EqualTo(32));
+            
+        }
+        [Test]
+        public void CalculateFare_IfNullRides_ThrowsException()
+        {
+            var invoiceGenerator = new InvoiceGenerator();
+
+            var exception = Assert.Throws<CabInvoiceException>(() => invoiceGenerator.CalculateFare(null));
+            Assert.That(exception.type, Is.EqualTo(CabInvoiceException.ExceptionType.NULL_RIDES));
+        }
 
 
     }
