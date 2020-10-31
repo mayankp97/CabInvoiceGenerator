@@ -18,6 +18,7 @@ namespace CabInvoiceGenerator
         /// Constrcutor To Create RideRepository instance.
         /// </summary>
         /// <summary>
+        /// 
         public InvoiceGenerator(RideType rideType)
         {
             this.rideType = rideType;
