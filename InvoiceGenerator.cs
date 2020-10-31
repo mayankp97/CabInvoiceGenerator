@@ -8,7 +8,7 @@ namespace CabInvoiceGenerator
     {
         //Variable.
         RideType rideType;
-        //private RideRepository rideRepository;
+        private RideRepository rideRepository;
 
         //Constants.
         private readonly double MINIMUM_COST_PER_KM;
@@ -22,7 +22,7 @@ namespace CabInvoiceGenerator
         public InvoiceGenerator(RideType rideType)
         {
             this.rideType = rideType;
-            //this.rideRepository = new RideRepository();
+            this.rideRepository = new RideRepository();
             try
             {
                 //If Ride type is Premium Then Rates Set For Premium else For Normal.
@@ -106,6 +106,43 @@ namespace CabInvoiceGenerator
                 }
             }
             return new InvoiceSummary(rides.Length,totalFare);
+        }
+        /// <summary>
+        /// Function to Add Rides For UserId.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="rides"></param>
+        public void AddRides(string userId, Ride[] rides)
+        {
+            try
+            {
+                //Adding Ride To The Specified User.
+                rideRepository.AddRide(userId, rides);
+            }
+            catch (CabInvoiceException)
+            {
+                if (rides == null)
+                {
+                    throw new CabInvoiceException(CabInvoiceException.ExceptionType.NULL_RIDES, "Rides Are Null");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Function to Get Summary By UserId.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public InvoiceSummary GetInvoiceSummary(string userId)
+        {
+            try
+            {
+                return this.CalculateFare(rideRepository.GetRides(userId));
+            }
+            catch (CabInvoiceException)
+            {
+                throw new CabInvoiceException(CabInvoiceException.ExceptionType.INVALID_USER_ID, "Invalid UserID");
+            }
         }
     }
 }

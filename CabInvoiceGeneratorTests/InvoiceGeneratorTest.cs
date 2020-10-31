@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Reflection.PortableExecutable;
 using System.Text;
 
 namespace CabInvoiceGeneratorTests
@@ -55,7 +56,7 @@ namespace CabInvoiceGeneratorTests
         [Test]
         public void CalculateFare_IfMultipleRidesPassed_ReturnsInvoiceSummary()
         {
-            Ride[] rides = { new Ride(1.0,1), new Ride(2.0,1) };
+            Ride[] rides = { new Ride(1.0, 1), new Ride(2.0, 1) };
             var invoiceGenerator = new InvoiceGenerator(RideType.NORMAL);
 
             var result = invoiceGenerator.CalculateFare(rides);
@@ -71,6 +72,32 @@ namespace CabInvoiceGeneratorTests
 
             var exception = Assert.Throws<CabInvoiceException>(() => invoiceGenerator.CalculateFare(null));
             Assert.That(exception.type, Is.EqualTo(CabInvoiceException.ExceptionType.NULL_RIDES));
+        }
+
+        [Test]
+        public void GetInvoiceSummary_WhenPassedUserId_ReturnsInvoiceSummary()
+        {
+            Ride[] rides = { new Ride(1.0, 1), new Ride(2.0, 1) };
+            var invoiceGenerator = new InvoiceGenerator(RideType.NORMAL);
+            var userID = "1";
+
+            invoiceGenerator.AddRides(userID, rides);
+            var result = invoiceGenerator.GetInvoiceSummary(userID);
+            var expected = new InvoiceSummary(2, 32);
+
+            Assert.That(result, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void GetInvoiceSummary_WhenPassedInvalidUserId_ReturnsInvoiceSummary()
+        {
+            Ride[] rides = { new Ride(1.0, 1), new Ride(2.0, 1) };
+            var invoiceGenerator = new InvoiceGenerator(RideType.NORMAL);
+            var userID = "1";
+
+            invoiceGenerator.AddRides("2", rides);
+            var exception = Assert.Throws<CabInvoiceException>(() => invoiceGenerator.GetInvoiceSummary(userID));
+            Assert.That(exception.type, Is.EqualTo(CabInvoiceException.ExceptionType.INVALID_USER_ID));
         }
 
 
