@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="CabInvoiceGeneratorTests\**" />
+    <Compile Remove="New folder\**" />
+    <EmbeddedResource Remove="CabInvoiceGeneratorTests\**" />
+    <EmbeddedResource Remove="New folder\**" />
+    <None Remove="CabInvoiceGeneratorTests\**" />
+    <None Remove="New folder\**" />
+  </ItemGroup>
+
+</Project>
