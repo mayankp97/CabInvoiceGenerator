@@ -53,14 +53,15 @@ namespace CabInvoiceGeneratorTests
         }
 
         [Test]
-        public void CalculateFare_IfMultipleRidesPassed_ReturnsTotalFare()
+        public void CalculateFare_IfMultipleRidesPassed_ReturnsInvoiceSummary()
         {
             Ride[] rides = { new Ride(1.0,1), new Ride(2.0,1) };
             var invoiceGenerator = new InvoiceGenerator(RideType.NORMAL);
 
             var result = invoiceGenerator.CalculateFare(rides);
+            var expected = new InvoiceSummary(2, 32);
 
-            Assert.That(result, Is.EqualTo(32));
+            Assert.That(result, Is.EqualTo(expected));
             
         }
         [Test]
