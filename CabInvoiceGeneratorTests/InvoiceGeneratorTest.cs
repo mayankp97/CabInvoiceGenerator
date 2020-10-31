@@ -25,14 +25,15 @@ namespace CabInvoiceGeneratorTests
 
 
         [Test]
-        public void CalculateFare_IfValidParameters_ReturnsFare()
+        [TestCase(RideType.NORMAL,21.00)]
+        [TestCase(RideType.PREMIUM, 32.00)]
+        public void CalculateFare_IfValidParameters_ReturnsFare(RideType rideType, double expectedFare)
         {
-            var invoiceGenerator = new InvoiceGenerator(RideType.NORMAL);
+            var invoiceGenerator = new InvoiceGenerator(rideType);
 
-            var result = invoiceGenerator.CalculateFare(1.0, 1);
-            var expected = 11.00;
+            var result = invoiceGenerator.CalculateFare(2.0, 1);
 
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.That(result, Is.EqualTo(expectedFare));
         }
 
         [Test]
@@ -54,13 +55,15 @@ namespace CabInvoiceGeneratorTests
         }
 
         [Test]
-        public void CalculateFare_IfMultipleRidesPassed_ReturnsInvoiceSummary()
+        [TestCase(RideType.NORMAL, 32.00)]
+        [TestCase(RideType.PREMIUM, 52.00)]
+        public void CalculateFare_IfMultipleRidesPassed_ReturnsInvoiceSummary(RideType rideType, double expectedFare)
         {
             Ride[] rides = { new Ride(1.0, 1), new Ride(2.0, 1) };
-            var invoiceGenerator = new InvoiceGenerator(RideType.NORMAL);
+            var invoiceGenerator = new InvoiceGenerator(rideType);
 
             var result = invoiceGenerator.CalculateFare(rides);
-            var expected = new InvoiceSummary(2, 32);
+            var expected = new InvoiceSummary(2, expectedFare);
 
             Assert.That(result, Is.EqualTo(expected));
             
@@ -75,15 +78,17 @@ namespace CabInvoiceGeneratorTests
         }
 
         [Test]
-        public void GetInvoiceSummary_WhenPassedUserId_ReturnsInvoiceSummary()
+        [TestCase(RideType.NORMAL, 32.00)]
+        [TestCase(RideType.PREMIUM, 52.00)]
+        public void GetInvoiceSummary_WhenPassedUserId_ReturnsInvoiceSummary(RideType rideType, double expectedFare)
         {
             Ride[] rides = { new Ride(1.0, 1), new Ride(2.0, 1) };
-            var invoiceGenerator = new InvoiceGenerator(RideType.NORMAL);
+            var invoiceGenerator = new InvoiceGenerator(rideType);
             var userID = "1";
 
             invoiceGenerator.AddRides(userID, rides);
             var result = invoiceGenerator.GetInvoiceSummary(userID);
-            var expected = new InvoiceSummary(2, 32);
+            var expected = new InvoiceSummary(2, expectedFare);
 
             Assert.That(result, Is.EqualTo(expected));
         }
